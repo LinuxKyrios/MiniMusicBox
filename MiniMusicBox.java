@@ -52,6 +52,7 @@ class MiniMusicBox {
     }
 
     public static MidiEvent createEvent(int plc, int chnl, int first, int second, int tact) {
+        //creating event method with variables to set in message and return.
         MidiEvent event = null;
         try {
             ShortMessage m = new ShortMessage();
@@ -62,7 +63,38 @@ class MiniMusicBox {
     }
 
     class GraphPanel extends JPanel implements ControllerEventListener {
+        //Creating class for graphics
+        boolean message = false;
 
+        public void controlChange(ShortMessage event) {
+            message = true;
+            repaint();
+        }
+
+        //Creatig method for paint component
+        public void paintComponent(Graphics graph) {
+            if (message) {
+                Graphics2D graph2d = (Graphics2D) graph;
+
+                //Setting RGB
+                int r = (int) (Math.random() * 250);
+                int g = (int) (Math.random() * 250);
+                int b = (int) (Math.random() * 250);
+
+                //Setting new color for 2d component
+                graph2d.setColor(new Color(r, g, b));
+
+                //setting height and width
+                int height = (int) ((Math.random() * 120) + 10);
+                int width = (int) ((Math.random() * 120) + 10);
+
+                int x = (int) ((Math.random() * 40) + 10);
+                int y = (int) ((Math.random() * 40) + 10);
+                
+                graph2d.fillRect(x, y, height, width);
+                message = false;
+            }
+        }
     }
 }
 
