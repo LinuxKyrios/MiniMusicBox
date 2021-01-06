@@ -25,13 +25,15 @@ class MiniMusicBox {
     public void getMusic() {
         setGUI();
 
+            //Creating sequencer and sequenc with track, trying to catch possible exception
         try {
-            Sequencer sequencer = MidiSystem.getSequencer();
-            sequencer.open();
-            sequencer.addControllerEventListener(panel, new int[] {127});
-            Sequence seq = new Sequence(Sequence.PPQ, 4);
-            Track track = seq.createTrack();
+            Sequencer sequencer = MidiSystem.getSequencer(); //creating sequencer
+            sequencer.open(); //opening sequencer
+            sequencer.addControllerEventListener(panel, new int[] {127}); //adding controller event listener
+            Sequence seq = new Sequence(Sequence.PPQ, 4); //creating new Sequence objecy
+            Track track = seq.createTrack(); //Setting track.
 
+            //for loop for creating random sound event
             int r = 0;
             for (int i = 5; i < 60; i += 4) {
                 r = (int) ((Math.random() * 50) + 1);
@@ -40,6 +42,7 @@ class MiniMusicBox {
                 track.add(createEvent(128, 1, r, 100, i + 2));
             }
 
+            //activating sequencer
             sequencer.setSequence(seq);
             sequencer.setTempoInBPM(220);
             sequencer.start();
@@ -49,7 +52,13 @@ class MiniMusicBox {
     }
 
     public static MidiEvent createEvent(int plc, int chnl, int first, int second, int tact) {
-
+        MidiEvent event = null;
+        try {
+            ShortMessage m = new ShortMessage();
+            m.setMessage(plc, chnl, first, second);
+            event = new MidiEvent(m, tact);
+        } catch (Exception ex) {}
+        return event;
     }
 
     class GraphPanel extends JPanel implements ControllerEventListener {
